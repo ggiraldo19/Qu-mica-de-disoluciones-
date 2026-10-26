@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1a1c20">
+<title>Química grado noveno · Disoluciones</title>
+<style>
+:root{--paper:#eaddc5;--ink:#1a1a1a;--blue:#4a7694;--muted:#8b867c;--board:#22252a;--vintage-white:#f4f1ea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--board);color:var(--paper);font-family:'Courier New',Courier,monospace}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+
+/* Textura de pizarra/papel viejo de fondo */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.15;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23fff' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E")}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px);background-size:30px 30px;z-index:-1}
+
+header{position:fixed;z-index:5;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:19px 4vw;background:linear-gradient(#1a1c20f5,#1a1c2000)}
+
+/* Letras estilo collage de revista/tabla periódica */
+.brand-collage {display:flex; gap:3px; align-items:center; font-size:26px;}
+.brand-collage span {display:inline-block; padding:4px 8px; border:1px solid #333; box-shadow:2px 3px 0 rgba(0,0,0,0.6); font-weight:bold;}
+.brand-collage span:nth-child(1) {background:var(--vintage-white); color:var(--ink); transform:rotate(-4deg); font-family:Georgia,serif;}
+.brand-collage span:nth-child(2) {background:var(--ink); color:var(--vintage-white); transform:rotate(2deg); font-family:Arial,sans-serif;}
+.brand-collage span:nth-child(3) {background:var(--vintage-white); color:var(--ink); transform:rotate(-2deg); font-family:'Times New Roman',serif;}
+.brand-collage span:nth-child(4) {background:var(--blue); color:var(--vintage-white); transform:rotate(5deg); font-family:Courier,monospace;}
+.brand-collage span:nth-child(5) {background:var(--vintage-white); color:var(--ink); transform:rotate(-3deg); font-family:Georgia,serif;}
+.brand-collage span:nth-child(6) {background:#c8b699; color:var(--ink); transform:rotate(4deg); font-family:Arial,sans-serif;}
+.brand-collage span:nth-child(7) {background:var(--vintage-white); color:var(--ink); transform:rotate(-1deg); font-family:Georgia,serif;}
+
+.brand-subtitle {display:block;font:11px Arial;letter-spacing:4px;margin-top:7px;color:var(--paper);text-shadow:1px 1px 0 #000}
+
+.tools{display:flex;gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+.quiet{background:var(--vintage-white);color:var(--ink);border:1px solid #000;padding:10px 15px;font-size:12px;font-weight:bold;box-shadow:3px 3px 0 rgba(0,0,0,0.8);text-transform:uppercase;border-radius:2px}
+.quiet:hover{background:var(--blue);color:white;transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(0,0,0,0.8)}
+
+main{height:100svh;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+section{min-height:100svh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;align-items:center;padding:100px 9vw 70px;overflow:hidden;}
+
+/* Fondo tipo papel rasgado para las secciones */
+section:nth-child(odd){background:radial-gradient(ellipse at 80% 50%,#2c3740 0%,transparent 60%)}
+section:nth-child(even){background:radial-gradient(ellipse at 20% 50%,#3d362d 0%,transparent 60%)}
+
+.layout{width:100%;max-width:1300px;margin:auto;display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:7vw}
+.eyebrow{font-size:12px;font-weight:bold;letter-spacing:3px;color:var(--blue);text-transform:uppercase;background:var(--vintage-white);color:var(--ink);display:inline-block;padding:3px 8px;border:1px solid #000;transform:rotate(-1deg);box-shadow:2px 2px 0 #000}
+h1{font:normal clamp(48px,6.6vw,100px)/.95 Georgia;margin:24px 0;text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
+h1 em{font-weight:normal;color:var(--blue);font-style:italic}
+h2{font:normal clamp(34px,4vw,60px)/1.05 Georgia;margin:25px 0 20px;text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
+.intro{font:18px/1.65 Georgia;color:var(--paper);max-width:470px;background:rgba(0,0,0,0.4);padding:15px;border-left:4px solid var(--blue)}
+
+.primary{border:2px solid #000;background:var(--blue);color:var(--vintage-white);border-radius:0;padding:15px 23px;font-weight:bold;letter-spacing:.5px;margin-top:14px;box-shadow:4px 4px 0 #000;text-transform:uppercase}
+.primary:hover{background:var(--vintage-white);color:var(--ink)}
+.sub{font-size:12px;color:var(--muted);line-height:1.7;font-family:Arial,sans-serif;margin-top:15px}
+
+.art{position:relative;min-width:0;display:flex;justify-content:center}
+/* Efecto de recorte de papel para el arte */
+.scrapbook-cutout{background:var(--vintage-white);padding:15px;border:1px solid #ccc;box-shadow:8px 8px 15px rgba(0,0,0,0.6), inset 0 0 20px rgba(139,115,85,0.1);transform:rotate(2deg);max-width:100%}
+section:nth-child(even) .scrapbook-cutout{transform:rotate(-2deg)}
+.scrapbook-cutout svg{width:100%;max-height:50svh;display:block}
+.caption{text-align:center;font:italic 13px Georgia;color:var(--ink);margin-top:10px;border-top:1px dashed #999;padding-top:8px}
+
+.speech{background:var(--vintage-white);color:var(--ink);border:1px solid #000;padding:16px 20px;margin:14px 0;box-shadow:4px 4px 0 #000;font:17px/1.5 Georgia;position:relative;background-image:repeating-linear-gradient(transparent,transparent 23px,#0000001a 23px,#0000001a 24px)}
+.speech.other{background:#d4dce0;margin-left:24px}
+
+.choice{margin-top:24px;background:rgba(255,255,255,0.05);padding:15px;border:1px dashed var(--muted)}
+.choice p{font-size:14px;line-height:1.5;font-weight:bold;font-family:Arial}
+.options{display:flex;flex-wrap:wrap;gap:10px}
+.options button{background:var(--board);color:var(--paper);border:1px solid var(--paper);border-radius:0;padding:11px 14px;text-align:left;font-size:13px;line-height:1.4;font-family:Arial}
+.options button:hover,.options button[aria-pressed=true]{background:var(--paper);color:var(--ink);font-weight:bold}
+.feedback{font-size:14px;line-height:1.5;color:var(--blue);min-height:40px;margin-top:12px;font-family:Georgia,serif;font-style:italic}
+
+.rail{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:13px;z-index:6}
+.rail button{width:12px;height:12px;padding:0;border:2px solid var(--paper);border-radius:0;background:transparent;transform:rotate(45deg)}
+.rail button.active{background:var(--blue);border-color:var(--blue);box-shadow:0 0 0 2px var(--paper)}
+
+footer{position:fixed;bottom:0;left:0;right:0;z-index:5;padding:14px 4vw;display:flex;align-items:center;gap:18px;background:linear-gradient(transparent,#111);font-size:12px;letter-spacing:2px;font-weight:bold}
+.progress{height:4px;flex:1;background:rgba(255,255,255,0.2)}
+.progress i{display:block;height:100%;background:var(--blue);transition:width .4s}
+.nav{border:2px solid var(--vintage-white);background:var(--ink);color:var(--vintage-white);width:36px;height:36px;font-weight:bold}
+
+dialog{background:var(--vintage-white);color:var(--ink);border:2px solid #000;padding:30px;max-width:650px;width:90%;max-height:85svh;box-shadow:10px 10px 0 rgba(0,0,0,0.8);background-image:repeating-linear-gradient(transparent,transparent 28px,#00000011 28px,#00000011 29px);overflow-y:auto;}
+dialog::backdrop{background:#111111e6;backdrop-filter:blur(4px)}
+dialog h2{font-size:35px;font-family:Georgia,serif;border-bottom:3px solid var(--ink);padding-bottom:10px;margin-top:0}
+dialog button{border:2px solid #000;padding:10px;background:var(--board);color:var(--vintage-white);font-weight:bold;text-transform:uppercase;margin-top:10px;}
+dialog button:hover{background:var(--blue)}
+dialog .close{float:right;background:transparent;color:var(--ink);border:none;margin-top:0;}
+dialog .close:hover{background:transparent;color:red}
+
+#stops{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#stops button{text-align:left;line-height:1.7;background:var(--vintage-white);color:var(--ink);border:1px solid #000;box-shadow:2px 2px 0 #000}
+#stops button:hover{background:var(--blue);color:white}
+textarea{background:transparent;border:2px dashed #666;width:100%;min-height:110px;padding:12px;color:var(--ink);resize:vertical;font-family:'Courier New',monospace;font-size:16px;margin-top:10px;margin-bottom:10px;}
+
+/* Estilos de los inputs del simulador y experimento */
+input[type=range] { -webkit-appearance: none; width: 100%; margin: 10px 0 20px; background: transparent; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; background: var(--ink); border: 2px solid var(--paper); cursor: pointer; margin-top: -8px; border-radius:50%; }
+input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--muted); border: 1px solid var(--ink); }
+
+.upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; margin-bottom:15px; }
+.upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor:pointer; height:100%; }
+.polaroid { background: white; padding: 10px 10px 30px 10px; border: 1px solid #ccc; box-shadow: 4px 4px 8px rgba(0,0,0,0.4); transform: rotate(-2deg); max-width: 250px; margin: 15px auto; display: none; }
+.polaroid img { width: 100%; height: auto; border: 1px solid #eee; }
+
+@media(max-width:700px){
+header{padding:15px 22px; flex-direction:column; gap:10px}
+.brand-collage {font-size:18px;}
+.layout{grid-template-columns:1fr;gap:20px}
+.art{order:-1;max-width:90%;margin:auto;width:100%}
+.scrapbook-cutout svg{max-height:30svh}
+section{padding:130px 30px 68px;min-height:100svh;height:auto}
+h2{font-size:28px;margin:15px 0}
+.speech{font-size:15px;padding:12px 14px}
+.rail{right:10px;gap:12px}
+.caption{display:none}
+#stops{grid-template-columns:1fr}
+.sim-container {flex-direction:column;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<header>
+<div>
+  <div class="brand-collage">
+    <span>Q</span><span>U</span><span>Í</span><span>M</span><span>I</span><span>C</span><span>A</span>
+  </div>
+  <small class="brand-subtitle">GRADO NOVENO</small>
+</div>
+<div class="tools">
+    <button class="quiet" id="simBtn">⚗️ Simulador</button>
+    <button class="quiet" id="expBtn">🔬 Experimento</button>
+    <button class="quiet" id="mapBtn">◎ Laboratorios</button>
+    <button class="quiet" id="bookBtn">▤ Libreta</button>
+</div>
+</header>
+<main id="feed" aria-label="Historieta de Química"></main>
+<nav class="rail" aria-label="Escenas" id="rail"></nav>
+<footer>
+<span id="count">01 / 08</span><div class="progress"><i id="bar"></i></div><span id="era">EL UMBRAL</span><button class="nav" id="prev" aria-label="Escena anterior">↑</button><button class="nav" id="next" aria-label="Escena siguiente">↓</button>
+</footer>
+
+<!-- Modales -->
+<dialog id="map">
+<button class="close" data-close>✕ Cerrar</button>
+<p class="eyebrow" style="color:var(--ink)">Mapa de conceptos</p>
+<h2>¿Qué zona del laboratorio exploramos?</h2>
+<div id="stops"></div>
+</dialog>
+
+<dialog id="book">
+<button class="close" data-close>✕ Cerrar</button>
+<h2>Libreta </h2>
+<p style="font-family:Arial">Las observaciones que registras son tan importantes como los cálculos.</p>
+<div id="memories" style="font-family:Arial; font-size:14px; margin-bottom:15px"></div>
+<label for="note" style="font-weight:bold; font-family:Arial">Mi reflexión sobre las disoluciones en mi entorno</label>
+<textarea id="note" placeholder="¿Qué mezcla homogénea uso a diario? ¿Cuál es su soluto y solvente?"></textarea>
+<p class="sub" id="saveStatus">Se guarda en este navegador cuando está disponible.</p>
+<button id="download">Descargar mi libreta</button>
+</dialog>
+
+<dialog id="simModal">
+<button class="close" data-close>✕ Cerrar</button>
+<h2>Simulador de Disoluciones</h2>
+<p style="font-family:Arial; font-size:14px">Experimenta ajustando la cantidad de soluto (Sal común) y solvente (Agua). Observa cómo cambia la concentración y el tipo de disolución según su punto de saturación.</p>
+
+<div class="sim-container" style="display:flex; gap:20px; font-family:Arial; margin-top:20px">
+  <div class="controls" style="flex:1">
+     <label style="font-weight:bold">Masa del Soluto (Sal): <span id="solutoVal" style="color:var(--blue); font-size:18px">10</span> g</label>
+     <input type="range" id="solutoSlider" min="0" max="100" value="10">
+
+     <label style="font-weight:bold">Volumen de Solvente (Agua): <span id="solventeVal" style="color:var(--blue); font-size:18px">100</span> mL</label>
+     <input type="range" id="solventeSlider" min="50" max="250" value="100">
+
+     <div style="margin-top:20px; padding:15px; background:var(--board); color:var(--vintage-white); border:2px solid #000; box-shadow:4px 4px 0 #000">
+        <h3 style="margin-top:0; color:var(--paper); border-bottom:1px solid #555; padding-bottom:5px">Resultados</h3>
+        <p><strong>% m/v:</strong> <span id="res_mv">10.0</span> %</p>
+        <p><strong>% m/m:</strong> <span id="res_mm">9.1</span> %</p>
+        <p><strong>Clasificación:</strong> <span id="res_tipo" style="color:#6fa1c2; font-weight:bold; text-transform:uppercase">Diluida</span></p>
+     </div>
+  </div>
+  
+  <div class="visuals" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border:2px dashed #999; background:rgba(255,255,255,0.3)">
+     <!-- Gráfico de Vaso de Precipitados -->
+     <div style="position:relative; width:140px; height:180px; border:6px solid #1a1a1a; border-top:none; border-radius:0 0 15px 15px; background:rgba(255,255,255,0.7); overflow:hidden; box-shadow:inset 0 -10px 20px rgba(0,0,0,0.1)">
+        <!-- Indicadores de volumen -->
+        <div style="position:absolute; left:0; bottom:20%; width:15px; border-bottom:2px solid #1a1a1a"></div>
+        <div style="position:absolute; left:0; bottom:40%; width:25px; border-bottom:2px solid #1a1a1a"></div>
+        <div style="position:absolute; left:0; bottom:60%; width:15px; border-bottom:2px solid #1a1a1a"></div>
+        <div style="position:absolute; left:0; bottom:80%; width:25px; border-bottom:2px solid #1a1a1a"></div>
+        
+        <!-- Líquido -->
+        <div id="liquid" style="position:absolute; bottom:0; width:100%; height:40%; background:#4a7694; transition:height 0.4s ease, background 0.4s ease; opacity:0.85"></div>
+        
+        <!-- Precipitado sólido (solo visible al sobresaturar) -->
+        <div id="precipitate" style="position:absolute; bottom:0; width:100%; height:0%; background:repeating-linear-gradient(45deg, #c8b699, #c8b699 5px, #bda682 5px, #bda682 10px); transition:height 0.4s ease; border-top:2px dashed #8a7b63"></div>
+     </div>
+     <p style="font-size:12px; font-weight:bold; margin-top:15px; color:var(--ink)">Vaso de Precipitados</p>
+  </div>
+</div>
+</dialog>
+
+<dialog id="expModal">
+<button class="close" data-close>✕ Cerrar</button>
+<h2>Experimento: Cristales de Sal</h2>
+<div style="font-family:Arial; font-size:14px; line-height:1.6; margin-bottom:20px;">
+    <p>Vamos a observar cómo la temperatura afecta la solubilidad y qué ocurre cuando una disolución sobresaturada se enfría lentamente.</p>
+    <div style="background:rgba(0,0,0,0.05); padding:10px; border-left:4px solid var(--blue); margin-bottom:15px;">
+        <strong>Materiales:</strong> Sal de cocina (soluto), Agua (solvente), 1 vaso de vidrio transparente, 1 cuchara, 1 hilo de algodón, 1 lápiz, 1 cacerola (para calentar agua).
+    </div>
+    <strong>Procedimiento:</strong>
+    <ol style="margin-top:5px; padding-left:20px;">
+        <li>Con la ayuda de un adulto, calienta medio vaso de agua casi hasta hervir.</li>
+        <li>Agrega sal cucharada por cucharada y revuelve. Continúa hasta que la sal ya no se disuelva y se vaya al fondo. Has creado una <strong>disolución sobresaturada</strong>.</li>
+        <li>Vierte el líquido transparente en el vaso de vidrio (evita pasar los granos del fondo).</li>
+        <li>Amarra el hilo al medio del lápiz y apóyalo sobre la boca del vaso, de modo que el hilo cuelgue dentro del líquido sin tocar el fondo.</li>
+        <li>Déjalo reposar en un lugar tranquilo durante 3 a 5 días. ¡Observa cómo se forman los cristales!</li>
+    </ol>
+</div>
+
+<label for="expNote" style="font-weight:bold; font-family:Arial">Mis Observaciones (Día 1 al 5):</label>
+<textarea id="expNote" placeholder="Día 1: El agua está turbia. Día 3: Veo pequeños cubos formándose en el hilo..."></textarea>
+
+<div style="text-align:center; margin-top:10px;">
+    <div class="upload-btn-wrapper">
+      <button class="quiet" style="font-size:14px;">📸 Subir foto de mis cristales</button>
+      <input type="file" id="photoUpload" accept="image/*" />
+    </div>
+    
+    <div id="polaroidContainer" class="polaroid">
+        <img id="expPreview" src="" alt="Mis cristales" />
+        <p style="font-family:'Courier New', Courier, monospace; font-size:12px; font-weight:bold; color:#1a1a1a; margin:10px 0 0 0;">Evidencia del Lab.</p>
+    </div>
+</div>
+</dialog>
+
+<script>
+const scenes=[
+{era:'El umbral',date:'GRADO NOVENO · QUÍMICA',title:'Laboratorio<br>de <em>disoluciones.</em>',place:'Toda gran mezcla comienza con una gota.',type:'atom'},
+{era:'Mezclas',date:'CONCEPTOS BÁSICOS',title:'El agua no<br>está sola.',type:'flask',a:'¿Por qué la sal desaparece en el agua, pero la arena se va al fondo?',b:'En una disolución química, las partículas del soluto miden menos de 1 nanómetro. Se mezclan tan íntimamente con el solvente que forman una sola fase homogénea imposible de separar por filtración simple.',q:'Si mezclas agua y aceite y los agitas muy fuerte, ¿se forma una disolución química?',opts:['Sí, porque temporalmente se ven mezclados.','No, porque eventualmente formarán dos fases visibles.'],responses:['Las emulsiones temporales no son disoluciones. Deben ser estables y homogéneas a nivel molecular.','¡Correcto! Es una mezcla heterogénea. Sus componentes no se integran de manera uniforme ni estable a nivel atómico.'],concept:'Disolución: Mezcla homogénea de dos o más sustancias que no reaccionan entre sí.'},
+{era:'Componentes',date:'ANATOMÍA DE UNA DISOLUCIÓN',title:'Soluto y<br>solvente.',type:'microscope',a:'En una disolución de alcohol medicinal al 70%, hay 70% de alcohol y 30% de agua. ¿Quién es el solvente?',b:'El solvente siempre es la sustancia que se encuentra en mayor proporción y suele determinar el estado físico final de la mezcla. El soluto es la sustancia que se encuentra en menor cantidad.',q:'Basado en eso, en el alcohol al 70%, ¿cuál es el solvente?',opts:['El alcohol, porque está en mayor cantidad.','El agua, porque siempre es el solvente universal.'],responses:['Exacto. Aunque el agua suele ser el solvente, en este caso específico el alcohol supera en volumen (70%).','Cuidado: el agua es un excelente solvente, pero la regla de oro es la "mayor proporción". Aquí el alcohol predomina.'],concept:'El soluto y el solvente pueden ser sólidos, líquidos o gases. Su interacción depende de la polaridad (lo similar disuelve a lo similar).'},
+{era:'Clasificación',date:'LA SATURACIÓN Y LA TEMPERATURA',title:'El límite de<br>la mezcla.',type:'tubes',a:'¿Por qué es más fácil disolver chocolate en polvo en leche caliente que en leche fría?',b:'¡Por la temperatura! En líquidos, calentar aumenta la energía cinética, permitiendo disolver más soluto sólido. A este límite máximo de soluto disuelto a una temperatura dada se le llama punto de saturación.',q:'¿Cómo se llama a la disolución que contiene menos soluto del que el solvente es capaz de disolver?',opts:['Disolución insaturada.','Disolución sobresaturada.'],responses:['¡Bien! Al estar insaturada o diluida, aún tiene capacidad para seguir disolviendo más soluto.','Incorrecto. Una sobresaturada contiene MÁS soluto del límite normal (logrado alterando la temperatura y luego enfriando lentamente).'],concept:'Curva de solubilidad: Gráfica que muestra cómo cambia la cantidad máxima de soluto que se puede disolver al variar la temperatura.'},
+{era:'Práctica',date:'LABORATORIO EN CASA',title:'Preparando<br>abono líquido.',type:'flask',a:'Necesito preparar una disolución nutritiva exacta para unas plantas. Tengo el fertilizante en polvo (soluto) y agua (solvente).',b:'Pasos de laboratorio: 1) Pesar el soluto en una balanza. 2) Disolverlo con un poco de solvente en un vaso de precipitados. 3) Transferir a un balón aforado. 4) Aforar (agregar agua hasta la marca exacta del volumen final).',q:'¿Por qué NO agregamos primero todo el volumen de agua y luego el polvo?',opts:['Porque el polvo podría hacer que el volumen final rebase la medida deseada.','Porque el polvo no se disolvería en mucha agua.'],responses:['¡Excelente deducción! El soluto ocupa un volumen. Si llenas de agua primero, al echar el polvo te pasarás de la concentración deseada.','El polvo sí se disolvería, pero el volumen final sería incorrecto, alterando la concentración matemática.'],concept:'El aforo es la marca en el cuello del balón volumétrico que indica el volumen exacto de la solución total.'},
+{era:'Concentración',date:'CÁLCULOS MATEMÁTICOS',title:'Fórmulas<br>líquidas.',type:'board',a:'¿Cómo expreso numéricamente qué tan concentrada quedó la disolución?',b:'Usamos unidades físicas (porcentajes de masa y volumen) o unidades químicas (como los moles en la Molaridad). Debes memorizar estas relaciones entre el soluto y la disolución total.',q:'Si mezclas 10 gramos de sal en 90 gramos de agua, ¿cuál es el porcentaje masa/masa (% m/m)?',opts:['10%, porque es (10g / 100g) x 100','11.1%, porque es (10g / 90g) x 100'],responses:['¡Correcto! La masa total de la disolución es 100g (10g de soluto + 90g de solvente).','Error. Dividiste por la masa del solvente (90g), no por la masa total de la disolución (100g).'],concept:`<div style='margin-top:10px; padding:10px; background:rgba(0,0,0,0.2); border:1px dashed #999; border-radius:0; font-family:Courier, monospace; font-size:13px'><strong>TABLA DE FÓRMULAS:</strong><br><br>• % m/m = (m_soluto / m_disolución) × 100<br>• % m/v = (m_soluto / v_disolución) × 100<br>• % v/v = (v_soluto / v_disolución) × 100<br>• Molaridad (M) = moles_soluto / L_disolución</div>`},
+{era:'Cotidianidad',date:'MÁS ALLÁ DEL LÍQUIDO',title:'Todo es<br>una mezcla.',type:'tubes',a:'Siempre pensé que las disoluciones solo existían como líquidos coloridos dentro de los tubos de ensayo.',b:'¡Para nada! El aire que respiras es un gas disuelto en otro gas (oxígeno en nitrógeno). Una moneda de bronce es un sólido disuelto en sólido (una aleación de cobre y estaño).',q:'El agua gasificada (soda) tiene burbujas por dentro. ¿Qué tipo de disolución es antes de destaparla?',opts:['Gas disuelto en líquido.','Líquido disuelto en gas.'],responses:['Correcto. El dióxido de carbono (gas) es el soluto que está disuelto a presión dentro del agua (solvente).','Recuerda que el solvente define el estado físico. Como la soda es líquida, el líquido es el solvente.'],concept:'El estado del solvente determina el estado final de la disolución. Las aleaciones, el aire puro y el agua de mar son disoluciones.'},
+{era:'Tu historia',date:'FIN DE LA PRÁCTICA · INICIO DE TU REFLEXIÓN',title:'La ciencia<br>queda en tus manos.',type:'atom',a:'Ahora veo el mundo como un gigantesco sistema de solutos y solventes interactuando matemáticamente.',b:'<b>TU TURNO:</b> Piensa en una disolución de tu entorno. Identifica sus componentes, investiga cómo calcularías su concentración y describe qué pasaría si la sobresaturas.',concept:'Evaluación final de Química - Grado 9.º. Escribe tu respuesta en la libreta y descárgala como evidencia para el profesor.'}
+];
+
+function art(type,i){
+  let decor='';
+  // Textura de papel antiguo para el fondo del SVG
+  const bgTexture = `<rect x="0" y="0" width="600" height="560" fill="#f4f1ea"/><path d="M0 0h600v560H0z" fill="url(#h${i})" opacity="0.5"/>`;
+
+  if(type==='atom'){
+    decor=`<g stroke="#1a1a1a" fill="none" stroke-width="6" class="orbit">
+            <ellipse cx="300" cy="280" rx="80" ry="210" transform="rotate(30 300 280)"/>
+            <ellipse cx="300" cy="280" rx="80" ry="210" transform="rotate(90 300 280)"/>
+            <ellipse cx="300" cy="280" rx="80" ry="210" transform="rotate(150 300 280)"/>
+           </g>
+           <circle cx="300" cy="280" r="45" fill="#4a7694" stroke="#1a1a1a" stroke-width="5" class="float"/>
+           <!-- Detalles vintage estilo diagrama -->
+           <line x1="100" y1="100" x2="150" y2="150" stroke="#8b867c" stroke-width="2" stroke-dasharray="5 5"/>
+           <circle cx="150" cy="150" r="10" fill="#1a1a1a"/>`;
+  }else if(type==='flask'){
+    decor=`<path d="M260 160 L340 160 L340 220 L420 400 Q440 440 400 440 L200 440 Q160 440 180 400 L260 220 Z" fill="#eaddc5" stroke="#1a1a1a" stroke-width="8"/>
+           <path d="M190 415 Q300 395 410 415 L400 440 L200 440 Z" fill="#4a7694"/>
+           <circle cx="300" cy="360" r="15" fill="#f4f1ea" opacity="0.8" class="float"/>
+           <circle cx="260" cy="390" r="10" fill="#f4f1ea" opacity="0.8" class="float"/>
+           <circle cx="340" cy="330" r="8" fill="#f4f1ea" opacity="0.8" class="float"/>
+           <path d="M260 180 L340 180" stroke="#1a1a1a" stroke-width="6"/>
+           <!-- Regla de medición estilo grabado -->
+           <path d="M210 380 h15 M225 350 h15 M240 320 h15 M255 290 h15" stroke="#1a1a1a" stroke-width="3"/>`;
+  }else if(type==='microscope'){
+    decor=`<path d="M240 400 L360 400 L340 370 L260 370 Z" fill="#c8b699" stroke="#1a1a1a" stroke-width="6"/>
+           <path d="M280 370 L280 180 Q280 120 360 120 L360 160 Q300 160 300 220 L300 370 Z" fill="#4a7694" stroke="#1a1a1a" stroke-width="6"/>
+           <rect x="250" y="240" width="35" height="90" transform="rotate(-25 250 240)" fill="#eaddc5" stroke="#1a1a1a" stroke-width="5"/>
+           <rect x="230" y="320" width="70" height="15" fill="#1a1a1a"/>
+           <!-- Círculos de enfoque -->
+           <circle cx="330" cy="220" r="25" fill="#f4f1ea" stroke="#1a1a1a" stroke-width="5"/>
+           <circle cx="330" cy="220" r="10" fill="#1a1a1a"/>`;
+  }else if(type==='tubes'){
+    decor=`<rect x="210" y="260" width="180" height="25" fill="#8b867c" stroke="#1a1a1a" stroke-width="5"/>
+           <rect x="210" y="410" width="180" height="25" fill="#8b867c" stroke="#1a1a1a" stroke-width="5"/>
+           <path d="M240 200 L240 430 A 25 25 0 0 0 290 430 L290 200" fill="#eaddc5" stroke="#1a1a1a" stroke-width="6"/>
+           <path d="M310 200 L310 430 A 25 25 0 0 0 360 430 L360 200" fill="#eaddc5" stroke="#1a1a1a" stroke-width="6"/>
+           <path d="M243 320 L243 430 A 22 22 0 0 0 287 430 L287 380 Z" fill="#4a7694"/>
+           <path d="M313 350 L313 430 A 22 22 0 0 0 357 430 L357 400 Z" fill="#1a1a1a"/>
+           <path d="M250 280 h30 M320 280 h30" stroke="#1a1a1a" stroke-width="3"/>`;
+  }else if(type==='board'){
+    decor=`<rect x="160" y="120" width="280" height="240" fill="#22252a" stroke="#c8b699" stroke-width="16"/>
+           <!-- Tizas/Líneas como en la pizarra -->
+           <line x1="190" y1="170" x2="310" y2="170" stroke="#f4f1ea" stroke-width="4" stroke-dasharray="8 4"/>
+           <line x1="190" y1="210" x2="390" y2="210" stroke="#f4f1ea" stroke-width="4" stroke-dasharray="10 5"/>
+           <line x1="190" y1="250" x2="270" y2="250" stroke="#f4f1ea" stroke-width="4" stroke-dasharray="15 5"/>
+           <!-- Hexágono químico vintage -->
+           <path d="M360 280 L380 265 L400 280 L400 305 L380 320 L360 305 Z" fill="none" stroke="#4a7694" stroke-width="5"/>
+           <circle cx="360" cy="280" r="6" fill="#f4f1ea"/>
+           <circle cx="380" cy="265" r="6" fill="#f4f1ea"/>
+           <circle cx="380" cy="320" r="6" fill="#f4f1ea"/>`;
+  }
+  
+  return `<div class="scrapbook-cutout">
+    <svg viewBox="0 0 600 560" role="img" aria-label="Ilustración de química vintage">
+      <defs><pattern id="h${i}" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 10L10 0" stroke="#1a1a1a" stroke-width="1" opacity="0.1"/></pattern></defs>
+      ${bgTexture}
+      ${decor}
+      <!-- Texto de estampa estilo imprenta antigua -->
+      <text x="300" y="535" text-anchor="middle" fill="#1a1a1a" font-family="'Courier New', monospace" font-weight="bold" font-size="14" letter-spacing="4">FIG. ${i+1} — ${scenes[i].era.toUpperCase()}</text>
+    </svg>
+  </div>`
+}
+
+const feed=document.querySelector('#feed');let current=0;let state={answers:{},note:'',expNote:'',expPhoto:''};try{state=JSON.parse(localStorage.getItem('quimica-v3'))||state}catch(e){}if(!state.answers)state.answers={};
+feed.innerHTML=scenes.map((s,i)=>`<section id="scene${i}" class="${i===0?'cover':''}" aria-label="Escena ${i+1}: ${s.era}"><div class="layout"><div><div class="eyebrow">${s.date}</div>${i===0?`<h1>${s.title}</h1><p class="intro">Un viaje hacia los misterios de las disoluciones que nos rodean y sus cálculos matemáticos.</p><button class="primary" data-go="1">Entrar al laboratorio &nbsp; ↓</button><p class="sub">8 estaciones · Química para grado 9.º<br>Desliza hacia arriba, usa la rueda o las flechas.</p>`:`<h2>${s.title}</h2><div class="speech">${s.a}</div><div class="speech other">${s.b}</div>${s.opts?`<div class="choice"><p>${s.q}</p><div class="options">${s.opts.map((o,k)=>`<button data-scene="${i}" data-option="${k}" aria-pressed="false">${o}</button>`).join('')}</div><div class="feedback" id="feedback${i}" aria-live="polite"></div></div>`:`<button class="primary" id="finish">Escribir mi reflexión ↗</button><button class="quiet" data-go="0">Volver al inicio</button>`}<p class="sub">${s.concept}</p>`}</div><div class="art">${art(s.type,i)}<div class="caption">${i===0?s.place:'Estación de laboratorio · Química interactiva'}</div></div></div></section>`).join('');
+
+const rail=document.querySelector('#rail');rail.innerHTML=scenes.map((s,i)=>`<button data-go="${i}" aria-label="Ir a ${s.era}" title="${s.era}"></button>`).join('');document.querySelector('#stops').innerHTML=scenes.map((s,i)=>`<button data-go="${i}"><b>0${i+1} · ${s.era}</b><br><small style="font-family:Courier">${s.date}</small></button>`).join('');
+
+function go(i){document.querySelector('#scene'+Math.max(0,Math.min(7,i))).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});document.querySelector('#map').close()}
+function save(){try{localStorage.setItem('quimica-v3',JSON.stringify(state));const saveMsg = document.querySelector('#saveStatus'); if(saveMsg) saveMsg.textContent='Guardado en este navegador.';}catch(e){}}
+function choose(i,k,persist=true){state.answers[i]=k;document.querySelector('#feedback'+i).textContent=scenes[i].responses[k];document.querySelectorAll(`[data-scene="${i}"]`).forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.option===k)));if(persist)save()}
+
+Object.entries(state.answers).forEach(([i,k])=>{if(scenes[i]?.opts?.[k])choose(+i,+k,false)});
+
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.go!==undefined)go(+b.dataset.go);if(b.dataset.option!==undefined)choose(+b.dataset.scene,+b.dataset.option);if(b.hasAttribute('data-close'))b.closest('dialog').close()});
+
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){current=+e.target.id.replace('scene','');document.querySelector('#count').textContent=`0${current+1} / 08`;document.querySelector('#era').textContent=scenes[current].era.toUpperCase();document.querySelector('#bar').style.width=((current+1)/8*100)+'%';rail.querySelectorAll('button').forEach((b,i)=>{b.classList.toggle('active',i===current);if(i===current)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});document.querySelector('#prev').disabled=current===0;document.querySelector('#next').disabled=current===7}})},{root:feed,threshold:.55});document.querySelectorAll('section').forEach(s=>observer.observe(s));
+
+document.querySelector('#prev').onclick=()=>go(current-1);document.querySelector('#next').onclick=()=>go(current+1);
+document.querySelector('#mapBtn').onclick=()=>document.querySelector('#map').showModal();
+document.querySelector('#simBtn').onclick=()=>document.querySelector('#simModal').showModal();
+document.querySelector('#expBtn').onclick=()=>document.querySelector('#expModal').showModal();
+
+function book(){document.querySelector('#memories').replaceChildren();const p=document.createElement('p');p.textContent=`Has explorado ${Object.keys(state.answers).length} de 6 estaciones. Puedes volver a cualquier punto para revisar tus respuestas.`;document.querySelector('#memories').append(p);document.querySelector('#book').showModal()}
+
+document.querySelector('#bookBtn').onclick=book;document.querySelector('#finish').onclick=book;
+const note=document.querySelector('#note');note.value=state.note||'';note.oninput=()=>{state.note=note.value;save()};
+
+const expNote=document.querySelector('#expNote');expNote.value=state.expNote||'';expNote.oninput=()=>{state.expNote=expNote.value;save()};
+
+/* Lógica de Foto de Experimento */
+const photoUpload = document.getElementById('photoUpload');
+const polaroidContainer = document.getElementById('polaroidContainer');
+const expPreview = document.getElementById('expPreview');
+
+function displayPhoto(base64str) {
+    if(base64str) {
+        expPreview.src = base64str;
+        polaroidContainer.style.display = 'block';
+    }
+}
+if(state.expPhoto) displayPhoto(state.expPhoto);
+
+photoUpload.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            state.expPhoto = event.target.result;
+            displayPhoto(state.expPhoto);
+            save();
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]')||/TEXTAREA|INPUT|BUTTON/.test(e.target.tagName))return;if(['ArrowDown','PageDown','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(current+(['ArrowDown','PageDown'].includes(e.key)?1:-1))}});
+
+document.querySelector('#download').onclick=()=>{const text=['LABORATORIO DEL ASOMBRO — MI LIBRETA',new Date().toLocaleString('es-CO'),'',...Object.entries(state.answers).map(([i,k])=>scenes[i].era+'\n'+scenes[i].q+'\nMi elección: '+scenes[i].opts[k]+'\n'+scenes[i].responses[k]+'\n'),'MI REFLEXIÓN',state.note||'(Sin reflexión escrita)','','EXPERIMENTO: CRISTALES DE SAL',state.expNote||'(Sin observaciones)'].join('\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Mi_libreta_quimica.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+
+/* Lógica del Simulador */
+const solutoSlider = document.getElementById('solutoSlider');
+const solventeSlider = document.getElementById('solventeSlider');
+const solVal = document.getElementById('solutoVal');
+const solvVal = document.getElementById('solventeVal');
+const r_mv = document.getElementById('res_mv');
+const r_mm = document.getElementById('res_mm');
+const r_tipo = document.getElementById('res_tipo');
+const liquid = document.getElementById('liquid');
+const precip = document.getElementById('precipitate');
+
+function updateSim() {
+    let soluto = parseFloat(solutoSlider.value);
+    let solvente = parseFloat(solventeSlider.value);
+    
+    solVal.textContent = soluto;
+    solvVal.textContent = solvente;
+
+    let mv = (soluto / solvente) * 100;
+    let mm = (soluto / (soluto + solvente)) * 100;
+
+    r_mv.textContent = mv.toFixed(1);
+    r_mm.textContent = mm.toFixed(1);
+
+    let maxSoluto = (36 * solvente) / 100;
+    let tipo = "";
+    let color = "#4a7694";
+    let precipHeight = 0;
+
+    if (soluto === 0) {
+        tipo = "Solvente Puro";
+        color = "#a0c4d9";
+    } else if (soluto < maxSoluto * 0.5) {
+        tipo = "Insaturada (Diluida)";
+        color = "#6fa1c2";
+    } else if (soluto < maxSoluto) {
+        tipo = "Insaturada (Concentrada)";
+        color = "#4a7694";
+    } else if (soluto === maxSoluto || Math.abs(soluto - maxSoluto) < 1) {
+        tipo = "Saturada";
+        color = "#2c4a5e";
+    } else {
+        tipo = "Sobresaturada (Con precipitado)";
+        color = "#2c4a5e";
+        let exceso = soluto - maxSoluto;
+        precipHeight = Math.min((exceso / 100) * 80, 25); 
+    }
+
+    r_tipo.textContent = tipo;
+    r_tipo.style.color = (tipo.includes("Sobresaturada")) ? "#c8b699" : "#6fa1c2";
+    
+    let heightPercent = (solvente / 250) * 100;
+    liquid.style.height = heightPercent + '%';
+    liquid.style.backgroundColor = color;
+    precip.style.height = precipHeight + '%';
+}
+
+solutoSlider.addEventListener('input', updateSim);
+solventeSlider.addEventListener('input', updateSim);
+updateSim();
+</script>
+</body>
+</html>
